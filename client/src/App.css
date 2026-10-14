@@ -1,0 +1,454 @@
+/* ────────────────────────────────────────────────
+   RESET & BASE
+   ──────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #1e293b;
+}
+
+button,
+select,
+textarea,
+input {
+  font: inherit;
+}
+
+/* ────────────────────────────────────────────────
+   NAVBAR
+   ──────────────────────────────────────────────── */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 7%;
+  background: white;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.brand {
+  color: #334b82;
+  font-size: 22px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.brand-icon {
+  margin-right: 8px;
+  color: #36866c;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+nav button,
+.secondary {
+  background: transparent;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+nav button:hover,
+.secondary:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* Counsellor nav actions */
+.nav-cta {
+  background: #334b82 !important;
+  color: white !important;
+  border-color: #334b82 !important;
+}
+
+.nav-cta:hover {
+  background: #263c70 !important;
+}
+
+.nav-logout {
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  border-color: #fecaca !important;
+}
+
+.nav-logout:hover {
+  background: #fee2e2 !important;
+}
+
+/* ────────────────────────────────────────────────
+   HOME / HERO
+   ──────────────────────────────────────────────── */
+.hero {
+  max-width: 850px;
+  margin: 70px auto;
+  padding: 30px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: #36866c;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+h1 {
+  color: #263c70;
+  font-size: clamp(32px, 5vw, 48px);
+  line-height: 1.2;
+}
+
+.intro {
+  max-width: 600px;
+  margin: 20px auto;
+  line-height: 1.8;
+  color: #526078;
+}
+
+.primary {
+  display: inline-block;
+  margin: 8px;
+  padding: 13px 18px;
+  background: #334b82;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.primary:hover {
+  background: #263c70;
+}
+
+.primary:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+.note {
+  margin-top: 35px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* ────────────────────────────────────────────────
+   CONTENT (Privacy, Appointment, Confirmation, Status, Login)
+   ──────────────────────────────────────────────── */
+.content {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 14px;
+  line-height: 1.8;
+}
+
+.content.wide {
+  max-width: 1100px;
+}
+
+.content h1 {
+  font-size: 32px;
+}
+
+.content li {
+  margin-bottom: 12px;
+}
+
+.content label {
+  display: block;
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.subtle {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: -6px;
+}
+
+/* ────────────────────────────────────────────────
+   FORM FIELDS — always light, even in dark mode
+   ──────────────────────────────────────────────── */
+.content select,
+.content textarea,
+.content input[type="text"],
+.content input[type="email"],
+.content input[type="password"] {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  background: white;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.content select:focus,
+.content textarea:focus,
+.content input[type="text"]:focus,
+.content input[type="email"]:focus,
+.content input[type="password"]:focus {
+  outline: 2px solid #334b82;
+  outline-offset: 1px;
+  border-color: #334b82;
+}
+
+.content textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ────────────────────────────────────────────────
+   ERROR MESSAGE
+   ──────────────────────────────────────────────── */
+.error {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* ────────────────────────────────────────────────
+   CONFIRMATION CODE BOX
+   ──────────────────────────────────────────────── */
+.confirmation .code-box {
+  margin: 24px 0;
+  padding: 20px;
+  background: #f1f5f9;
+  border-left: 4px solid #36866c;
+  border-radius: 10px;
+}
+
+.code-label {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #64748b;
+}
+
+.code {
+  margin: 8px 0 12px;
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #263c70;
+  font-family: "Courier New", monospace;
+}
+
+.code-note {
+  margin: 0;
+  font-size: 13px;
+  color: #526078;
+  line-height: 1.6;
+}
+
+/* ────────────────────────────────────────────────
+   STATUS RESULT BOX
+   ──────────────────────────────────────────────── */
+.status-box {
+  margin-top: 24px;
+  padding: 18px 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.status-box p {
+  margin: 6px 0;
+}
+
+/* ────────────────────────────────────────────────
+   STATUS BADGES
+   ──────────────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-scheduled {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badge-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ────────────────────────────────────────────────
+   APPOINTMENTS TABLE
+   ──────────────────────────────────────────────── */
+.table-wrap {
+  margin-top: 20px;
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: white;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.appointments-table th {
+  background: #f8fafc;
+  color: #334155;
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.appointments-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.appointments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.appointments-table .mono {
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+  color: #263c70;
+  letter-spacing: 1px;
+}
+
+.appointments-table .small {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.appointments-table code {
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #334155;
+}
+
+/* ────────────────────────────────────────────────
+   ACTION BUTTONS (mini)
+   ──────────────────────────────────────────────── */
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mini {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mini:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.mini:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ────────────────────────────────────────────────
+   INLINE LINK-STYLE BUTTON
+   ──────────────────────────────────────────────── */
+.linklike {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #334b82;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+/* ────────────────────────────────────────────────
+   FOOTER
+   ──────────────────────────────────────────────── */
+footer {
+  padding: 25px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* ────────────────────────────────────────────────
+   RESPONSIVE
+   ──────────────────────────────────────────────── */
+@media (max-width: 650px) {
+  .navbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hero {
+    margin: 30px auto;
+    padding: 20px;
+  }
+
+  .content {
+    margin: 24px 14px;
+    padding: 20px;
+  }
+
+  .content.wide {
+    max-width: 100%;
+    margin: 24px 8px;
+    padding: 16px;
+  }
+
+  .code {
+    font-size: 22px;
+  }
+
+  .appointments-table th,
+  .appointments-table td {
+    padding: 8px;
+    font-size: 13px;
+  }
+}

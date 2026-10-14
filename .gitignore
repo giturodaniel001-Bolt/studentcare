@@ -1,0 +1,31 @@
+# Node / React
+client/node_modules/
+client/dist/
+client/.vite/
+npm-debug.log*
+
+# Python / Flask
+server/.venv/
+server/__pycache__/
+server/*.pyc
+server/flask_session/
+server/.flask_session/
+server/instance/
+
+# Environment secrets — NEVER commit
+.env
+.env.*
+*.env
+server/.env
+!server/.env.example
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
