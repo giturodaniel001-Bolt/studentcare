@@ -1,7 +1,7 @@
 import os
 import random
 import string
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, request, send_from_directory, session
 from flask_cors import CORS
 from flask_session import Session
 from dotenv import load_dotenv
@@ -10,7 +10,7 @@ from werkzeug.security import check_password_hash
 
 from db import get_connection, test_connection
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
 
 app = Flask(__name__)
 
@@ -19,11 +19,23 @@ app.config["SECRET_KEY"] = os.getenv("FLASK_SECRET_KEY", "dev-secret-change-me")
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = False
 Session(app)
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["SESSION_COOKIE_SECURE"] = False   # True only with HTTPS in production
+app.config["SESSION_COOKIE_SAMESITE"] = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
+app.config["SESSION_COOKIE_SECURE"] = os.getenv("SESSION_COOKIE_SECURE", "0") == "1"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 
-CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
+CLIENT_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CLIENT_ORIGINS", "http://localhost:5173").split(",")
+    if origin.strip()
+]
+CORS(app, supports_credentials=True, origins=CLIENT_ORIGINS)
+
+# Serve the built React client from this service when enabled (single origin).
+SERVER_DIR = os.path.dirname(os.path.abspath(__file__))
+CLIENT_DIST = os.getenv("CLIENT_DIST") or os.path.join(SERVER_DIR, "..", "client", "dist")
+SERVE_CLIENT = os.getenv("SERVE_CLIENT", "0") == "1" and os.path.isfile(
+    os.path.join(CLIENT_DIST, "index.html")
+)
 
 
 # ─────────────────────────────────────────────────────────
@@ -84,6 +96,8 @@ def require_counsellor():
 
 @app.get("/")
 def home():
+    if SERVE_CLIENT:
+        return send_from_directory(CLIENT_DIST, "index.html")
     return jsonify({"message": "StudentCare API is running", "status": "success"})
 
 
@@ -399,5 +413,13 @@ def get_audit_log():
             pass
 
 
+if SERVE_CLIENT:
+    @app.get("/<path:filename>")
+    def client_files(filename):
+        if os.path.isfile(os.path.join(CLIENT_DIST, filename)):
+            return send_from_directory(CLIENT_DIST, filename)
+        return jsonify({"error": "Not found"}), 404
+
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=int(os.getenv("PORT", 5000)))

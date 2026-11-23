@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: studentcare
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: SERVE_CLIENT
+        value: "1"
+      - key: SESSION_COOKIE_SECURE
+        value: "1"
+      - key: CLIENT_DIST
+        value: /app/client/dist
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false

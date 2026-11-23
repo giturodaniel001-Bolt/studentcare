@@ -373,6 +373,7 @@ function StatusPage() {
 function LoginPage({ onLogin, setPage }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -391,50 +392,85 @@ function LoginPage({ onLogin, setPage }) {
   }
 
   return (
-    <section className="content">
-      <h1>Counsellor login</h1>
-      <p>
-        This area is only for authorised counselling staff. Students do not need
-        to log in to request support.
-      </p>
+    <section className="login-page">
+      <aside className="login-aside">
+        <p className="eyebrow light">COUNSELLOR PORTAL</p>
+        <h1>Support starts with someone who listens.</h1>
+        <p className="login-aside-copy">
+          Sign in to review appointment requests, update their status, and keep
+          every access accountable.
+        </p>
+        <ul className="login-points">
+          <li>Session-based authentication</li>
+          <li>Passwords stored as salted hashes</li>
+          <li>Every action recorded in the audit log</li>
+        </ul>
+      </aside>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="login-email">Email</label>
-        <input
-          id="login-email"
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="counsellor@example.com"
-        />
+      <div className="login-card">
+        <div className="login-card-head">
+          <span className="login-mark">+</span>
+          <div>
+            <h2>Counsellor sign in</h2>
+            <p>Use the staff account issued by the counselling office.</p>
+          </div>
+        </div>
 
-        <label htmlFor="login-password">Password</label>
-        <input
-          id="login-password"
-          type="password"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="login-email">Email</label>
+          <input
+            id="login-email"
+            type="email"
+            required
+            autoFocus
+            autoComplete="username"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="counsellor@example.com"
+          />
 
-        {error && <p className="error">{error}</p>}
+          <label htmlFor="login-password">Password</label>
+          <div className="password-wrap">
+            <input
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="show-password"
+              onClick={() => setShowPassword((s) => !s)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
 
-        <button className="primary" type="submit" disabled={loading}>
-          {loading ? "Logging in…" : "Log in"}
-        </button>
-      </form>
+          {error && (
+            <p className="error" role="alert">
+              {error}
+            </p>
+          )}
 
-      <p className="note">
-        Not a counsellor?{" "}
-        <button
-          type="button"
-          className="linklike"
-          onClick={() => setPage("home")}
-        >
-          Return to home
-        </button>
-      </p>
+          <button className="primary login-submit" type="submit" disabled={loading}>
+            {loading ? "Signing in…" : "Sign in"}
+          </button>
+        </form>
+
+        <p className="login-foot">
+          Not a counsellor?{" "}
+          <button
+            type="button"
+            className="linklike"
+            onClick={() => setPage("home")}
+          >
+            Return to home
+          </button>
+        </p>
+      </div>
     </section>
   );
 }

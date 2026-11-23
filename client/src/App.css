@@ -418,6 +418,158 @@ footer {
 }
 
 /* ────────────────────────────────────────────────
+   LOGIN PAGE
+   ──────────────────────────────────────────────── */
+.login-page {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  max-width: 980px;
+  margin: 50px auto;
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(38, 60, 112, 0.14);
+}
+
+.login-aside {
+  padding: 46px 44px;
+  background: linear-gradient(155deg, #263c70 0%, #334b82 55%, #2f7459 130%);
+  color: white;
+}
+
+.eyebrow.light {
+  color: #9fe3c9;
+  margin: 0 0 14px;
+  font-size: 13px;
+}
+
+.login-aside h1 {
+  color: white;
+  font-size: clamp(26px, 3vw, 34px);
+  margin: 0 0 16px;
+}
+
+.login-aside-copy {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.7;
+}
+
+.login-points {
+  margin: 26px 0 0;
+  padding-left: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 2;
+}
+
+.login-card {
+  padding: 44px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-card-head {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.login-mark {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #e8f5ef;
+  color: #36866c;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.login-card-head h2 {
+  margin: 0;
+  color: #263c70;
+  font-size: 24px;
+}
+
+.login-card-head p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.login-card form {
+  margin-top: 10px;
+}
+
+.login-card label {
+  display: block;
+  margin-top: 18px;
+  font-weight: bold;
+}
+
+.login-card input {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  background: white;
+  color: #1e293b;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.login-card input:focus {
+  outline: 2px solid #334b82;
+  outline-offset: 1px;
+  border-color: #334b82;
+}
+
+.password-wrap {
+  position: relative;
+  margin-top: 8px;
+}
+
+.password-wrap input {
+  margin-top: 0;
+  padding-right: 70px;
+}
+
+.show-password {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #eef2f9;
+  color: #334b82;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.show-password:hover {
+  background: #e0e8f4;
+}
+
+.login-submit {
+  width: 100%;
+  margin: 24px 0 0;
+}
+
+.login-foot {
+  margin: 22px 0 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* ────────────────────────────────────────────────
    RESPONSIVE
    ──────────────────────────────────────────────── */
 @media (max-width: 650px) {
@@ -450,5 +602,20 @@ footer {
   .appointments-table td {
     padding: 8px;
     font-size: 13px;
+  }
+}
+
+@media (max-width: 850px) {
+  .login-page {
+    grid-template-columns: 1fr;
+    margin: 24px 14px;
+  }
+
+  .login-aside {
+    padding: 30px 26px;
+  }
+
+  .login-card {
+    padding: 28px 24px;
   }
 }

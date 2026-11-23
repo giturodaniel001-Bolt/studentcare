@@ -1,7 +1,8 @@
 // Central place for API configuration.
-// If your Flask server runs on a different host/port later, change it here only.
+// Empty base means same origin: Vite proxies /api to Flask in development,
+// and Flask serves the built client in production.
 
-export const API_BASE_URL = "http://localhost:5000";
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
 
 // Common options for every fetch — includes cookies/session
 const withCredentials = {
