@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
+import "./redesign.css";
+import heroImage from "./assets/wellness-hero.webp";
 import {
   createAppointment,
   getAppointmentStatus,
@@ -35,40 +37,80 @@ function App() {
     setPage("home");
   }
 
+  function goToSection(id) {
+    setPage("home");
+    window.setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+  }
+
   return (
     <div className="app">
-      <header className="navbar">
-        <a className="brand" href="#home" onClick={() => setPage("home")}>
-          <span className="brand-icon">+</span>
-          StudentCare
-        </a>
-
-        <nav>
-          <button onClick={() => setPage("home")}>Home</button>
-          <button onClick={() => setPage("privacy")}>Confidentiality</button>
-          <button onClick={() => setPage("appointment")}>Get Support</button>
-          <button onClick={() => setPage("status")}>Check Status</button>
-
-          {authChecked && !counsellor && (
-            <button onClick={() => setPage("login")} className="nav-cta">
-              Counsellor Login
+      <header className="site-header">
+        <div className="topline">
+          <div className="topline-inner">
+            <span>Confidential support for university students</span>
+            <button className="topline-start" onClick={() => setPage("appointment")}>
+              Start today →
             </button>
-          )}
+            <span className="topline-emergency">Not an emergency service · Crisis line 999 or 112</span>
+          </div>
+        </div>
 
-          {counsellor && (
-            <>
-              <button onClick={() => setPage("dashboard")}>Dashboard</button>
-              <button onClick={() => setPage("audit")}>Audit Log</button>
-              <button onClick={handleLogout} className="nav-logout">
-                Logout
+        <div className="navbar">
+          <a
+            className="brand"
+            href="#home"
+            onClick={(e) => {
+              e.preventDefault();
+              setPage("home");
+            }}
+          >
+            <span className="brand-mark">+</span>
+            <span>StudentCare</span>
+          </a>
+
+          <nav className="nav-links" aria-label="Main navigation">
+            <button onClick={() => setPage("home")} className={page === "home" ? "active" : ""}>
+              Home
+            </button>
+            <button onClick={() => goToSection("how-it-works")}>How it works</button>
+            <button onClick={() => setPage("privacy")} className={page === "privacy" ? "active" : ""}>
+              Confidentiality
+            </button>
+            <button onClick={() => setPage("appointment")} className={page === "appointment" ? "active" : ""}>
+              Get support
+            </button>
+            <button onClick={() => setPage("status")} className={page === "status" ? "active" : ""}>
+              Check status
+            </button>
+          </nav>
+
+          <div className="nav-actions">
+            {authChecked && !counsellor && (
+              <button className="nav-staff" onClick={() => setPage("login")}>
+                Staff login
               </button>
-            </>
-          )}
-        </nav>
+            )}
+            {counsellor && (
+              <>
+                <button className="nav-staff" onClick={() => setPage("dashboard")}>
+                  Dashboard
+                </button>
+                <button className="nav-link" onClick={() => setPage("audit")}>
+                  Audit log
+                </button>
+                <button className="nav-logout" onClick={handleLogout}>
+                  Log out
+                </button>
+              </>
+            )}
+          </div>
+        </div>
       </header>
 
       <main>
-        {page === "home" && <HomePage setPage={setPage} />}
+        {page === "home" && <HomePage setPage={setPage} goToSection={goToSection} />}
         {page === "privacy" && <PrivacyPage setPage={setPage} />}
         {page === "appointment" && <AppointmentPage setPage={setPage} />}
         {page === "confirmation" && <ConfirmationPage setPage={setPage} />}
@@ -99,7 +141,7 @@ function App() {
         )}
       </main>
 
-      <footer>StudentCare · Student wellbeing and support</footer>
+      <SiteFooter setPage={setPage} goToSection={goToSection} />
     </div>
   );
 }
@@ -107,32 +149,204 @@ function App() {
 // ────────────────────────────────────────────────
 // HOME
 // ────────────────────────────────────────────────
-function HomePage({ setPage }) {
+const HOW_STEPS = [
+  {
+    title: "Request privately",
+    body: "Share your email and how you'd like to be contacted. No personal story needed at this stage.",
+  },
+  {
+    title: "A counsellor reaches out",
+    body: "Your campus counselling team reviews the request and contacts you the way you chose.",
+  },
+  {
+    title: "Meet at your pace",
+    body: "Talk in a safe, private space — in person or arranged around your timetable.",
+  },
+  {
+    title: "Track with your code",
+    body: "Follow progress anytime with your anonymous tracking code. No email exposed.",
+  },
+];
+
+function HomePage({ setPage, goToSection }) {
   return (
-    <section className="hero">
-      <p className="eyebrow">YOUR WELLBEING MATTERS</p>
-      <h1>
-        You deserve support.
-        <br />
-        Your story matters.
-      </h1>
-      <p className="intro">
-        A simple, private way to explore counselling services and request an
-        appointment. You don't have to explain everything at once.
-      </p>
+    <>
+      <section className="hero hero-split">
+        <div className="hero-copy">
+          <p className="eyebrow">YOUR WELLBEING MATTERS</p>
+          <h1>You don&rsquo;t have to face everything alone.</h1>
+          <p className="intro">
+            StudentCare quietly connects you with your university&rsquo;s counselling
+            team. Ask for support in under a minute, choose how you&rsquo;d like to be
+            contacted, and follow up with an anonymous tracking code.
+          </p>
 
-      <button className="primary" onClick={() => setPage("appointment")}>
-        Request an appointment
-      </button>
-      <button className="secondary" onClick={() => setPage("privacy")}>
-        Understand your privacy
-      </button>
+          <div className="hero-actions">
+            <button className="primary large" onClick={() => setPage("appointment")}>
+              Request support
+            </button>
+            <button className="secondary large" onClick={() => goToSection("how-it-works")}>
+              How it works
+            </button>
+          </div>
 
-      <div className="note">
-        You can seek support at your own pace. This service is a prototype, not
-        an emergency service.
+          <p className="hero-note">
+            <span className="pulse-dot" aria-hidden="true" />
+            Confidential by design — your story stays between you and your counsellor.
+          </p>
+        </div>
+
+        <div className="hero-art">
+          <span className="blob blob-one" aria-hidden="true" />
+          <span className="blob blob-two" aria-hidden="true" />
+          <figure className="hero-figure">
+            <img
+              src={heroImage}
+              alt="A student in a calm conversation with a university counsellor in a bright room with plants"
+            />
+          </figure>
+          <div className="float-card">
+            <span className="float-mark" aria-hidden="true">+</span>
+            <div>
+              <strong>Your wellbeing matters.</strong>
+              <span>Support at your own pace.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="trust-strip" aria-label="What to expect">
+        <div className="trust-item">
+          <strong>Private by design</strong>
+          <span>Only what&rsquo;s needed is collected.</span>
+        </div>
+        <div className="trust-item">
+          <strong>No story required</strong>
+          <span>Share when you&rsquo;re ready, not before.</span>
+        </div>
+        <div className="trust-item">
+          <strong>A real person replies</strong>
+          <span>Your campus counselling team, not a bot.</span>
+        </div>
+      </section>
+
+      <section id="how-it-works" className="section how-section">
+        <div className="section-head centered">
+          <p className="eyebrow">HOW IT WORKS</p>
+          <h2>Simple, private, on your schedule.</h2>
+          <p className="section-sub">Four gentle steps between you and support.</p>
+        </div>
+
+        <ol className="steps">
+          {HOW_STEPS.map((step, index) => (
+            <li className="step" key={step.title}>
+              <span className="step-number">{String(index + 1).padStart(2, "0")}</span>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="section split-promo">
+        <article className="promo-card">
+          <p className="promo-kicker">CONFIDENTIALITY</p>
+          <h3>Know exactly how your information is handled.</h3>
+          <p>
+            Before you share anything, see what is collected, who can access it, and
+            the limits of confidentiality.
+          </p>
+          <button className="text-link" onClick={() => setPage("privacy")}>
+            Read the confidentiality guide →
+          </button>
+        </article>
+
+        <article className="promo-card promo-alt">
+          <p className="promo-kicker">ANONYMOUS TRACKING</p>
+          <h3>Check in without being identified.</h3>
+          <p>
+            Every request gets a code like <code>SC-4F8A2B</code>. Use it to follow
+            your request — no email ever exposed.
+          </p>
+          <button className="text-link" onClick={() => setPage("status")}>
+            Check a request →
+          </button>
+        </article>
+      </section>
+
+      <section className="cta-band">
+        <div>
+          <h2>Ready when you are.</h2>
+          <p>
+            Take it at your own pace. StudentCare is a prototype service and is not
+            an emergency service.
+          </p>
+        </div>
+        <button className="primary large on-dark" onClick={() => setPage("appointment")}>
+          Request support
+        </button>
+      </section>
+    </>
+  );
+}
+
+function SiteFooter({ setPage, goToSection }) {
+  return (
+    <footer className="site-footer">
+      <div className="footer-top">
+        <div className="footer-brand">
+          <a
+            className="brand"
+            href="#home"
+            onClick={(e) => {
+              e.preventDefault();
+              setPage("home");
+            }}
+          >
+            <span className="brand-mark">+</span>
+            <span>StudentCare</span>
+          </a>
+          <p>
+            A privacy-first way for university students to reach campus counselling
+            support — without explaining everything at once.
+          </p>
+        </div>
+
+        <div className="footer-col">
+          <h3>About StudentCare</h3>
+          <button onClick={() => setPage("home")}>Home</button>
+          <button onClick={() => goToSection("how-it-works")}>How it works</button>
+          <button onClick={() => setPage("privacy")}>Confidentiality guide</button>
+        </div>
+
+        <div className="footer-col">
+          <h3>Get support</h3>
+          <button onClick={() => setPage("appointment")}>Request an appointment</button>
+          <button onClick={() => setPage("status")}>Check request status</button>
+          <button onClick={() => setPage("login")}>Counsellor login</button>
+        </div>
+
+        <div className="footer-col">
+          <h3>Contact</h3>
+          <a href="mailto:counselling@your-university.ac.ke">counselling@your-university.ac.ke</a>
+          <span>Student Wellness Centre, Main Campus</span>
+          <span>Monday – Friday, 8:00 – 17:00</span>
+        </div>
       </div>
-    </section>
+
+      <div className="emergency-note" role="note">
+        <strong>StudentCare is not an emergency service.</strong>
+        <span>
+          If you or someone else is in immediate danger, contact campus security or
+          Kenya&rsquo;s emergency services on 999 or 112.
+        </span>
+      </div>
+
+      <div className="footer-legal">
+        <span>© {new Date().getFullYear()} StudentCare · Student wellbeing and support</span>
+        <button onClick={() => setPage("privacy")}>Privacy</button>
+      </div>
+    </footer>
   );
 }
 
