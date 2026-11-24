@@ -17,5 +17,9 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // Pages load their data from the API on mount, which this rule flags.
+      'react-hooks/set-state-in-effect': 'off',
+    },
   },
 ])
