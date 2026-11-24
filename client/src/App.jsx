@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import "./redesign.css";
-import heroImage from "./assets/wellness-hero.webp";
+import heroPhoto from "./assets/wellness-hero-photo.webp";
 import {
   createAppointment,
   getAppointmentStatus,
@@ -12,6 +12,51 @@ import {
   updateAppointmentStatus,
   getAuditLog,
 } from "./api";
+
+function ShieldIcon({ className = "icon" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 3.2 18.8 6v5.1c0 4.4-2.8 8.1-6.8 9.1-4-1-6.8-4.7-6.8-9.1V6L12 3.2Z" />
+      <path d="m9.2 11.8 2 2 3.6-3.7" />
+    </svg>
+  );
+}
+
+function ClockIcon({ className = "icon" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="8.6" />
+      <path d="M12 7.6V12l3 1.8" />
+    </svg>
+  );
+}
+
+function LockIcon({ className = "icon" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="5.2" y="10.2" width="13.6" height="9.6" rx="2.2" />
+      <path d="M8.4 10.2V7.6a3.6 3.6 0 0 1 7.2 0v2.6" />
+      <path d="M12 14v2.2" />
+    </svg>
+  );
+}
+
+function PhoneIcon({ className = "icon" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5.2 3.8h3l1.6 4.4-2.1 1.5a11.4 11.4 0 0 0 6.6 6.6l1.5-2.1 4.4 1.6v3a2 2 0 0 1-2.2 2A16.2 16.2 0 0 1 3.2 6a2 2 0 0 1 2-2.2Z" />
+    </svg>
+  );
+}
+
+function ArrowRightIcon({ className = "icon" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 12h15" />
+      <path d="m13 6 6 6-6 6" />
+    </svg>
+  );
+}
 
 function App() {
   const [page, setPage] = useState("home");
@@ -51,11 +96,18 @@ function App() {
       <header className="site-header">
         <div className="topline">
           <div className="topline-inner">
-            <span>Confidential support for university students</span>
+            <span className="topline-group">
+              <ShieldIcon className="topline-icon" />
+              <span>Confidential support for university students</span>
+            </span>
+            <span className="topline-rule" aria-hidden="true" />
             <button className="topline-start" onClick={() => setPage("appointment")}>
-              Start today →
+              Start today <ArrowRightIcon className="topline-arrow" />
             </button>
-            <span className="topline-emergency">Not an emergency service · Crisis line 999 or 112</span>
+            <span className="topline-emergency">
+              <PhoneIcon className="topline-icon" />
+              Not an emergency service · Crisis line 999 or 112
+            </span>
           </div>
         </div>
 
@@ -86,29 +138,29 @@ function App() {
             <button onClick={() => setPage("status")} className={page === "status" ? "active" : ""}>
               Check status
             </button>
-            {authChecked && !isCounsellor && (
-              <button
-                className={`nav-login${page === "login" ? " active" : ""}`}
-                onClick={() => setPage("login")}
-              >
-                Counsellor login
-              </button>
-            )}
           </nav>
 
-          {isCounsellor && (
-            <div className="nav-actions">
-              <button className="nav-staff" onClick={() => setPage("dashboard")}>
-                Dashboard
-              </button>
-              <button className="nav-link" onClick={() => setPage("audit")}>
-                Audit log
-              </button>
-              <button className="nav-logout" onClick={handleLogout}>
-                Log out
-              </button>
-            </div>
-          )}
+          <div className="nav-actions">
+            {isCounsellor ? (
+              <>
+                <button className="nav-staff" onClick={() => setPage("dashboard")}>
+                  Dashboard
+                </button>
+                <button className="nav-link" onClick={() => setPage("audit")}>
+                  Audit log
+                </button>
+                <button className="nav-logout" onClick={handleLogout}>
+                  Log out
+                </button>
+              </>
+            ) : (
+              authChecked && (
+                <button className="nav-staff" onClick={() => setPage("login")}>
+                  Counsellor Login
+                </button>
+              )
+            )}
+          </div>
         </div>
       </header>
 
@@ -176,7 +228,10 @@ function HomePage({ setPage, goToSection }) {
     <>
       <section className="hero hero-split">
         <div className="hero-copy">
-          <p className="eyebrow">YOUR WELLBEING MATTERS</p>
+          <p className="eyebrow">
+            <span>YOUR WELLBEING MATTERS</span>
+            <span className="eyebrow-rule" aria-hidden="true" />
+          </p>
           <h1>You don&rsquo;t have to face everything alone.</h1>
           <p className="intro">
             StudentCare quietly connects you with your university&rsquo;s counselling
@@ -188,49 +243,34 @@ function HomePage({ setPage, goToSection }) {
           <div className="hero-actions">
             <button className="primary large" onClick={() => setPage("appointment")}>
               Request support
+              <ArrowRightIcon className="cta-arrow" />
             </button>
             <button className="secondary large" onClick={() => goToSection("how-it-works")}>
               How it works
             </button>
           </div>
-
-          <p className="hero-note">
-            <span className="pulse-dot" aria-hidden="true" />
-            No account needed — your email is used only so a counsellor can reach you.
-          </p>
         </div>
 
-        <div className="hero-art">
-          <span className="blob blob-one" aria-hidden="true" />
-          <span className="blob blob-two" aria-hidden="true" />
-          <figure className="hero-figure">
-            <img
-              src={heroImage}
-              alt="A student in a calm conversation with a university counsellor in a bright room with plants"
-            />
-          </figure>
-          <div className="float-card">
-            <span className="float-mark" aria-hidden="true">+</span>
-            <div>
-              <strong>Your wellbeing matters.</strong>
-              <span>Support at your own pace.</span>
-            </div>
+        <figure className="hero-art">
+          <img
+            src={heroPhoto}
+            alt="A student and his counsellor in a calm conversation in a bright campus wellbeing office"
+          />
+        </figure>
+
+        <div className="trust-card" aria-label="What to expect">
+          <div className="trust-item">
+            <ShieldIcon className="trust-icon" />
+            <strong>Privacy first</strong>
           </div>
-        </div>
-      </section>
-
-      <section className="trust-strip" aria-label="What to expect">
-        <div className="trust-item">
-          <strong>Privacy first</strong>
-          <span>Only your email, contact choice and request status are stored.</span>
-        </div>
-        <div className="trust-item">
-          <strong>Simple requests</strong>
-          <span>No account needed — ask for support in under a minute.</span>
-        </div>
-        <div className="trust-item">
-          <strong>Secure access</strong>
-          <span>Staff sign-in is password-protected; sign-ins and status changes are logged.</span>
+          <div className="trust-item">
+            <ClockIcon className="trust-icon" />
+            <strong>Simple requests</strong>
+          </div>
+          <div className="trust-item">
+            <LockIcon className="trust-icon" />
+            <strong>Secure access</strong>
+          </div>
         </div>
       </section>
 
