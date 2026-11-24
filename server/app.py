@@ -300,12 +300,14 @@ def list_appointments():
         cursor = conn.cursor(dictionary=True)
         cursor.execute(
             """
-            SELECT id, tracking_code, preferred_contact, status, created_at, updated_at
-            FROM appointments
+            SELECT a.id, a.tracking_code, a.preferred_contact, a.status,
+                   a.created_at, a.updated_at, u.email AS student_email
+            FROM appointments a
+            JOIN users u ON u.id = a.student_id
             ORDER BY
-              CASE status WHEN 'pending' THEN 0 WHEN 'scheduled' THEN 1
-                          WHEN 'completed' THEN 2 ELSE 3 END,
-              created_at DESC
+              CASE a.status WHEN 'pending' THEN 0 WHEN 'scheduled' THEN 1
+                            WHEN 'completed' THEN 2 ELSE 3 END,
+              a.created_at DESC
             """
         )
         rows = cursor.fetchall()

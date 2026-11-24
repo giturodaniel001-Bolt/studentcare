@@ -44,6 +44,8 @@ function App() {
     }, 60);
   }
 
+  const isCounsellor = Boolean(counsellor && counsellor.role === "counsellor");
+
   return (
     <div className="app">
       <header className="site-header">
@@ -84,28 +86,29 @@ function App() {
             <button onClick={() => setPage("status")} className={page === "status" ? "active" : ""}>
               Check status
             </button>
-          </nav>
-
-          <div className="nav-actions">
-            {authChecked && !counsellor && (
-              <button className="nav-staff" onClick={() => setPage("login")}>
-                Staff login
+            {authChecked && !isCounsellor && (
+              <button
+                className={`nav-login${page === "login" ? " active" : ""}`}
+                onClick={() => setPage("login")}
+              >
+                Counsellor login
               </button>
             )}
-            {counsellor && (
-              <>
-                <button className="nav-staff" onClick={() => setPage("dashboard")}>
-                  Dashboard
-                </button>
-                <button className="nav-link" onClick={() => setPage("audit")}>
-                  Audit log
-                </button>
-                <button className="nav-logout" onClick={handleLogout}>
-                  Log out
-                </button>
-              </>
-            )}
-          </div>
+          </nav>
+
+          {isCounsellor && (
+            <div className="nav-actions">
+              <button className="nav-staff" onClick={() => setPage("dashboard")}>
+                Dashboard
+              </button>
+              <button className="nav-link" onClick={() => setPage("audit")}>
+                Audit log
+              </button>
+              <button className="nav-logout" onClick={handleLogout}>
+                Log out
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
@@ -124,13 +127,13 @@ function App() {
             setPage={setPage}
           />
         )}
-        {page === "dashboard" && counsellor && (
+        {page === "dashboard" && isCounsellor && (
           <DashboardPage counsellor={counsellor} />
         )}
-        {page === "audit" && counsellor && <AuditPage />}
+        {page === "audit" && isCounsellor && <AuditPage />}
 
         {/* Guard: if a non-counsellor somehow gets to a counsellor page */}
-        {(page === "dashboard" || page === "audit") && !counsellor && (
+        {(page === "dashboard" || page === "audit") && !isCounsellor && (
           <section className="content">
             <h1>Access restricted</h1>
             <p>You must log in as a counsellor to view this page.</p>
@@ -141,7 +144,7 @@ function App() {
         )}
       </main>
 
-      <SiteFooter setPage={setPage} goToSection={goToSection} />
+      <SiteFooter setPage={setPage} goToSection={goToSection} isCounsellor={isCounsellor} />
     </div>
   );
 }
@@ -156,15 +159,15 @@ const HOW_STEPS = [
   },
   {
     title: "A counsellor reaches out",
-    body: "Your campus counselling team reviews the request and contacts you the way you chose.",
+    body: "Your campus counselling team reviews the request and emails you to arrange the contact method you chose.",
   },
   {
     title: "Meet at your pace",
     body: "Talk in a safe, private space — in person or arranged around your timetable.",
   },
   {
-    title: "Track with your code",
-    body: "Follow progress anytime with your anonymous tracking code. No email exposed.",
+    title: "Track privately with your code",
+    body: "Follow progress anytime. The status page shows your request details, never your email.",
   },
 ];
 
@@ -178,7 +181,8 @@ function HomePage({ setPage, goToSection }) {
           <p className="intro">
             StudentCare quietly connects you with your university&rsquo;s counselling
             team. Ask for support in under a minute, choose how you&rsquo;d like to be
-            contacted, and follow up with an anonymous tracking code.
+            contacted, and follow up with a private tracking code that never shows
+            your email.
           </p>
 
           <div className="hero-actions">
@@ -192,7 +196,7 @@ function HomePage({ setPage, goToSection }) {
 
           <p className="hero-note">
             <span className="pulse-dot" aria-hidden="true" />
-            Confidential by design — your story stays between you and your counsellor.
+            No account needed — your email is used only so a counsellor can reach you.
           </p>
         </div>
 
@@ -217,16 +221,16 @@ function HomePage({ setPage, goToSection }) {
 
       <section className="trust-strip" aria-label="What to expect">
         <div className="trust-item">
-          <strong>Private by design</strong>
-          <span>Only what&rsquo;s needed is collected.</span>
+          <strong>Privacy first</strong>
+          <span>Only your email, contact choice and request status are stored.</span>
         </div>
         <div className="trust-item">
-          <strong>No story required</strong>
-          <span>Share when you&rsquo;re ready, not before.</span>
+          <strong>Simple requests</strong>
+          <span>No account needed — ask for support in under a minute.</span>
         </div>
         <div className="trust-item">
-          <strong>A real person replies</strong>
-          <span>Your campus counselling team, not a bot.</span>
+          <strong>Secure access</strong>
+          <span>Staff sign-in is password-protected; sign-ins and status changes are logged.</span>
         </div>
       </section>
 
@@ -253,8 +257,9 @@ function HomePage({ setPage, goToSection }) {
           <p className="promo-kicker">CONFIDENTIALITY</p>
           <h3>Know exactly how your information is handled.</h3>
           <p>
-            Before you share anything, see what is collected, who can access it, and
-            the limits of confidentiality.
+            Before you share anything, see what is collected, who can access it,
+            how it is protected — and what &ldquo;anonymous&rdquo; does and does
+            not mean here.
           </p>
           <button className="text-link" onClick={() => setPage("privacy")}>
             Read the confidentiality guide →
@@ -262,11 +267,12 @@ function HomePage({ setPage, goToSection }) {
         </article>
 
         <article className="promo-card promo-alt">
-          <p className="promo-kicker">ANONYMOUS TRACKING</p>
-          <h3>Check in without being identified.</h3>
+          <p className="promo-kicker">PRIVATE TRACKING</p>
+          <h3>Check in without showing your email.</h3>
           <p>
-            Every request gets a code like <code>SC-4F8A2B</code>. Use it to follow
-            your request — no email ever exposed.
+            Every request gets a code like <code>SC-4F8A2B</code>. The status page
+            shows progress without displaying your email — though your email is
+            stored so a counsellor can reach you.
           </p>
           <button className="text-link" onClick={() => setPage("status")}>
             Check a request →
@@ -290,7 +296,7 @@ function HomePage({ setPage, goToSection }) {
   );
 }
 
-function SiteFooter({ setPage, goToSection }) {
+function SiteFooter({ setPage, goToSection, isCounsellor }) {
   return (
     <footer className="site-footer">
       <div className="footer-top">
@@ -323,7 +329,11 @@ function SiteFooter({ setPage, goToSection }) {
           <h3>Get support</h3>
           <button onClick={() => setPage("appointment")}>Request an appointment</button>
           <button onClick={() => setPage("status")}>Check request status</button>
-          <button onClick={() => setPage("login")}>Counsellor login</button>
+          {isCounsellor ? (
+            <button onClick={() => setPage("dashboard")}>Counsellor dashboard</button>
+          ) : (
+            <button onClick={() => setPage("login")}>Counsellor login</button>
+          )}
         </div>
 
         <div className="footer-col">
@@ -355,21 +365,101 @@ function SiteFooter({ setPage, goToSection }) {
 // ────────────────────────────────────────────────
 function PrivacyPage({ setPage }) {
   return (
-    <section className="content">
-      <h1>Your privacy matters</h1>
+    <section className="content privacy-page">
+      <p className="eyebrow">PRIVACY &amp; CONFIDENTIALITY</p>
+      <h1>Your privacy, explained</h1>
       <p>
-        Before requesting support, you should understand what information is
-        collected, who can access it, and how it is protected.
+        Before you request support, here is exactly what happens to your
+        information: what &ldquo;anonymous&rdquo; means, what we store, who can
+        see it, and how it is protected.
       </p>
-      <ul>
-        <li>Only necessary information should be collected.</li>
-        <li>Access to counselling records must be restricted.</li>
-        <li>Confidentiality has limits that must be explained.</li>
-        <li>You should know how to ask questions about privacy.</li>
-      </ul>
-      <button className="primary" onClick={() => setPage("appointment")}>
-        Continue to appointment request
-      </button>
+
+      <div className="privacy-callout">
+        <strong>What &ldquo;anonymous&rdquo; means on StudentCare</strong>
+        <p>
+          Your tracking code lets you check progress without typing your email,
+          and the status page never displays your email. It is not full
+          anonymity: your email is stored with your request so a counsellor can
+          reach you, and anyone who has your code can see the limited status
+          details below. Keep your code private.
+        </p>
+      </div>
+
+      <div className="privacy-grid">
+        <article className="privacy-card">
+          <h2>What we collect</h2>
+          <ul>
+            <li>Your email address — the only contact detail the request form asks for.</li>
+            <li>Your preferred contact method: email, phone call or in-person.</li>
+            <li>Your request status and timestamps, plus the tracking code.</li>
+          </ul>
+          <p className="privacy-small">
+            The optional &ldquo;anything you want us to know?&rdquo; box is never
+            sent to the server or stored. This site does not ask for a phone
+            number; if you choose a phone call, a counsellor will email you first
+            to arrange it.
+          </p>
+        </article>
+
+        <article className="privacy-card">
+          <h2>Who can see it</h2>
+          <ul>
+            <li>
+              The public status page shows your status, preferred contact method
+              and timestamps to anyone who has your tracking code. It never shows
+              your email.
+            </li>
+            <li>Request records are available only to accounts signed in as counsellors.</li>
+            <li>Your email is used to contact you about your request, not for marketing.</li>
+            <li>
+              As with any online service, the administrators who operate the
+              database and hosting infrastructure can technically access stored
+              data.
+            </li>
+          </ul>
+        </article>
+
+        <article className="privacy-card">
+          <h2>How it is protected</h2>
+          <ul>
+            <li>Counsellor passwords are stored as salted scrypt hashes, never as plain text.</li>
+            <li>
+              Staff sign-in uses a server-side session cookie marked HttpOnly and
+              SameSite=Lax. HTTPS deployments also mark it Secure.
+            </li>
+            <li>The server checks the counsellor role on every staff request.</li>
+            <li>Sign-ins, request-list views and status changes are written to an audit log.</li>
+          </ul>
+        </article>
+
+        <article className="privacy-card">
+          <h2>Limits and your choices</h2>
+          <ul>
+            <li>This is not full anonymity — your email is linked to your request.</li>
+            <li>
+              Confidentiality in counselling is not absolute. At your first
+              meeting, ask your counsellor to explain when they may need to share
+              information, for example where there is a risk of serious harm.
+            </li>
+            <li>You decide how much to share, and you can ask privacy questions before sharing more.</li>
+          </ul>
+          <p className="privacy-small">
+            Privacy questions:{" "}
+            <a href="mailto:counselling@your-university.ac.ke">
+              counselling@your-university.ac.ke
+            </a>
+          </p>
+        </article>
+      </div>
+
+      <div className="privacy-actions">
+        <button className="primary" onClick={() => setPage("appointment")}>
+          Continue to request support
+        </button>
+        <button className="secondary" onClick={() => setPage("status")}>
+          Check a request
+        </button>
+      </div>
     </section>
   );
 }
@@ -410,8 +500,9 @@ function AppointmentPage({ setPage }) {
     <section className="content">
       <h1>Request support</h1>
       <p>
-        You only need to provide your email and a preferred contact method. You
-        can share more when you meet a counsellor.
+        We store your email and preferred contact method so a counsellor can
+        reach you. You can share more when you meet a counsellor — the optional
+        note below is never sent.
       </p>
 
       <form onSubmit={handleSubmit}>
@@ -435,9 +526,15 @@ function AppointmentPage({ setPage }) {
           <option value="phone">Phone call</option>
           <option value="in-person">In-person arrangement</option>
         </select>
+        {preferredContact === "phone" && (
+          <p className="field-hint">
+            We don&rsquo;t collect phone numbers on this site — a counsellor will
+            email you first to arrange the call.
+          </p>
+        )}
 
         <label htmlFor="message">
-          Anything you want us to know? (Optional — not stored)
+          Anything you want us to know? (Optional — never sent or stored)
         </label>
         <textarea
           id="message"
@@ -462,7 +559,11 @@ function AppointmentPage({ setPage }) {
         >
           check an existing request
         </button>{" "}
-        using your tracking code.
+        using your tracking code. Read{" "}
+        <button type="button" className="linklike" onClick={() => setPage("privacy")}>
+          how your information is handled
+        </button>
+        .
       </p>
     </section>
   );
@@ -479,16 +580,16 @@ function ConfirmationPage({ setPage }) {
     <section className="content confirmation">
       <h1>Request received ✅</h1>
       <p>
-        A counsellor will reach out through your preferred method:{" "}
-        <strong>{contact}</strong>.
+        A counsellor will reach out using the email you provided to arrange your
+        preferred contact: <strong>{contact}</strong>.
       </p>
 
       <div className="code-box">
         <p className="code-label">Your tracking code</p>
         <p className="code">{code}</p>
         <p className="code-note">
-          Save this code. You will need it to check your appointment status. It
-          does not reveal your email address.
+          Save this code. The status page never displays your email, but anyone
+          who has the code can see your request status — so keep it private.
         </p>
       </div>
 
@@ -538,6 +639,10 @@ function StatusPage() {
     <section className="content">
       <h1>Check appointment status</h1>
       <p>Enter your tracking code to see the current status of your request.</p>
+      <p className="field-hint">
+        This lookup never shows your email. Anyone with the code can see your
+        status, preferred contact method and timestamps — so keep it private.
+      </p>
 
       <form onSubmit={handleCheck}>
         <label htmlFor="code">Tracking code</label>
@@ -611,13 +716,13 @@ function LoginPage({ onLogin, setPage }) {
         <p className="eyebrow light">COUNSELLOR PORTAL</p>
         <h1>Support starts with someone who listens.</h1>
         <p className="login-aside-copy">
-          Sign in to review appointment requests, update their status, and keep
-          every access accountable.
+          Sign in to review appointment requests and update their status. Staff
+          sign-ins, request-list views and status changes are recorded.
         </p>
         <ul className="login-points">
           <li>Session-based authentication</li>
           <li>Passwords stored as salted hashes</li>
-          <li>Every action recorded in the audit log</li>
+          <li>Sign-ins and status changes recorded in an audit log</li>
         </ul>
       </aside>
 
@@ -748,6 +853,7 @@ function DashboardPage({ counsellor }) {
             <thead>
               <tr>
                 <th>Code</th>
+                <th>Student email</th>
                 <th>Preferred</th>
                 <th>Status</th>
                 <th>Requested</th>
@@ -758,6 +864,7 @@ function DashboardPage({ counsellor }) {
               {appointments.map((apt) => (
                 <tr key={apt.id}>
                   <td className="mono">{apt.tracking_code}</td>
+                  <td className="small">{apt.student_email}</td>
                   <td>{apt.preferred_contact}</td>
                   <td>
                     <span className={`badge badge-${apt.status}`}>
